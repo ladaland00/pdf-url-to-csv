@@ -36,7 +36,7 @@ pdf_url = 'https://www.sec.gov/files/investment/13flist2023q3.pdf'
 save_path = 'file.pdf'
 
 # Download the PDF
-# download_pdf(pdf_url, save_path)
+download_pdf(pdf_url, save_path)
 listData = []
 
 
@@ -121,4 +121,4 @@ outputFileName = "scrapedData.json"
 print("", len(listData))
 with open(outputFileName, "w", encoding='utf-8') as file:
     json.dump({"data": listData}, file, indent=4, ensure_ascii=False)
-# delete_file(pdf_file_path)
+delete_file(pdf_file_path)
