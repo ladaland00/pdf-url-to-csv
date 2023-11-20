@@ -55,7 +55,7 @@ def pdf_to_csv(pdf_path, csv_path):
         for index, df in enumerate(dfs):
             if "** List of Section 13F Securities **" not in df:
                 continue
-            print(f"Table {index + 1}:\n{df}\n")
+            # print(f"Table {index + 1}:\n{df}\n")
             df = df.T.reset_index().T.reset_index(drop=True)
 
             # Assign column names based on the number of columns
@@ -64,35 +64,30 @@ def pdf_to_csv(pdf_path, csv_path):
             # if index == 0:
             # print(df)
             for id, row in enumerate(df.itertuples()):
-                if id==1 or id==0 or id==2 :
+                if id == 1 or id == 0 or id == 2:
                     continue
                 parts = [str(val) for val in row]
                 issuer_description = ''
                 status = ''
-
-                if len(parts) == 3:
-                    issuer_description = parts[2]
-                elif len(parts) == 4:
-                    if '*' == parts[1]:
-                        parts[0] = parts[0] + ' *'
-                    elif 'nan' == parts[1]:
-                        parts[0] = parts[0] + ' '
-                    parts.pop(1)
-                    issuer_description = parts[2]
+                print(len(parts), parts)
+                if len(parts) == 4:
+                    if parts[2].startswith('*'):
+                        parts[1] = parts[1] + ' *'
+                        parts[2] = parts[2].replace("*","")
+                    issuer_description = parts[3]
                 elif len(parts) == 5:
-                    if '*' in parts:
-                        parts[0] = parts[0] + ' *'
-                    elif 'nan' == parts[1]:
-                        parts[0] = parts[0] + ' '
-                    parts.pop(1)
-                    issuer_description = parts[2]
+                    if parts[2].startswith('*'):
+                        parts[1] = parts[1] + ' *'
+                        parts[2] = parts[2].replace("*","")
+  
+                    issuer_description = parts[3]
 
-                    if parts[3] != "nan":
-                        status = parts[3]
+                    if parts[4] != "nan":
+                        status = parts[4]
 
-                cusip_no = parts[0]
-                issuer_name = parts[1]
-                if issuer_name == "nan":
+                cusip_no = parts[1]
+                issuer_name = parts[2]
+                if cusip_no == "nan":
                     continue
                 listData.append({
                     "CUSIP NO": cusip_no,
